@@ -1,7 +1,7 @@
 {
   "name": "@stone-js/pipeline",
   "version": "1.0.0",
-  "description": "Fluent API to add properties and mixins to your JS Class",
+  "description": "An implementation based on the Chain of Responsibility (aka CoR) design pattern.",
   "main": "./src/index.mjs",
   "module": "./src/index.mjs",
   "types": "./dist/index.d.mts",
