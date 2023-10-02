@@ -1,6 +1,6 @@
 {
   "name": "@stone-js/pipeline",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An implementation based on the Chain of Responsibility (aka CoR) design pattern.",
   "main": "./src/index.mjs",
   "module": "./src/index.mjs",
