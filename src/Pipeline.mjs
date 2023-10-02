@@ -128,13 +128,13 @@ export class Pipeline {
    */
   _reducer () {
     return (stack, pipe) => {
-      return passable => {
+      return async passable => {
         try {
-          if (this.#isFunction(pipe)) {
-            return pipe(passable, stack)
-          } else if (this.#isClass(pipe)) {
+          if (this.#isClass(pipe)) {
             pipe = this.container.make(pipe)
-            return this._handleReducer(pipe[this.#method](passable, stack))
+            return await this._handleReducer(pipe[this.#method](passable, stack))
+          } else if (this.#isFunction(pipe)) {
+            return await pipe(passable, stack)
           } else {
             throw new PipelineException('Middleware must be a function or a class')
           }
@@ -146,9 +146,9 @@ export class Pipeline {
   }
 
   _prepareDestination (destination) {
-    return passable => {
+    return async passable => {
       try {
-        destination(passable)
+        await destination(passable)
       } catch (error) {
         this._handleException(passable, error)
       }
