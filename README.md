@@ -6,6 +6,7 @@
 ![Maintenance](https://img.shields.io/maintenance/yes/2023)
 
 An implementation based on the Chain of Responsibility (aka CoR) design pattern.
+In summary; the pipelines take a job, process it, and forward it to the next pipeline.
 
 ## Table of Contents
 
