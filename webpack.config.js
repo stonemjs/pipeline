@@ -13,7 +13,7 @@ module.exports = (env) => {
       libraryTarget: 'umd',
       filename: 'index.js',
       globalObject: 'this',
-      library: 'StoneJSMacrobale',
+      library: 'StoneJSPipeline',
       path: path.resolve(__dirname, 'dist'),
     },
     module: {

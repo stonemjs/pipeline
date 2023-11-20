@@ -58,7 +58,7 @@ export class Pipeline {
    * @param  {any}  passable
    * @return {this}
    */
-  send (passable) {
+  send (...passable) {
     this.#passable = passable
     return this
   }
@@ -109,7 +109,7 @@ export class Pipeline {
       .reduce(
         this._reducer(),
         this._prepareDestination(destination)
-      )(this.#passable)
+      )(...this.#passable)
   }
 
   /**
@@ -118,7 +118,7 @@ export class Pipeline {
    * @return {any}
    */
   thenReturn () {
-    return this.then(passable => passable)
+    return this.then((...passable) => passable)
   }
 
   /**
@@ -128,29 +128,36 @@ export class Pipeline {
    */
   _reducer () {
     return (stack, pipe) => {
-      return async passable => {
+      return async (...passable) => {
         try {
+          const args = [].concat(passable, stack)
+
           if (this.#isClass(pipe)) {
             pipe = this.container.make(pipe)
-            return await this._handleReducer(pipe[this.#method](passable, stack))
+
+            if (!pipe[this.#method]) {
+              throw new PipelineException(`No method with this name(${this.#method}) exists in this class(${pipe.constructor.name})`)
+            }
+
+            return await this._handleReducer(pipe[this.#method](...args))
           } else if (this.#isFunction(pipe)) {
-            return await pipe(passable, stack)
+            return await pipe(...args)
           } else {
             throw new PipelineException('Middleware must be a function or a class')
           }
         } catch (error) {
-          this._handleException(passable, error)
+          return this._handleException(passable, error)
         }
       }
     }
   }
 
   _prepareDestination (destination) {
-    return async passable => {
+    return async (...passable) => {
       try {
-        await destination(passable)
+        return await destination(...passable)
       } catch (error) {
-        this._handleException(passable, error)
+        return this._handleException(passable, error)
       }
     }
   }

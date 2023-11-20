@@ -6,24 +6,24 @@ import { Pipeline } from '../../src/index.mjs'
  * and must return the next method invoked.
  */
 const middleware = [
-  function (data, next) {
-    return next(`${data} - 1`)
+  function (data, data2, next) {
+    return next(`${data} - 1`, `${data2} - A`)
   },
-  function (data, next) {
-    return next(`${data} - 2`)
+  function (data, data2, next) {
+    return next(`${data} - 2`, `${data2} - B`)
   },
-  (data, next) => next(`${data} - 3`),
-  (data, next) => next(`${data} - 4`),
-  (data, next) => next(`${data} - 5`),
-  (data, next) => next(`${data} - 6`),
-  async function (data, next) {
-    return next(await Promise.resolve(`${data} - 7 async`))
+  (data, data2, next) => next(`${data} - 3`, `${data2} - C`),
+  (data, data2, next) => next(`${data} - 4`, `${data2} - D`),
+  (data, data2, next) => next(`${data} - 5`, `${data2} - E`),
+  (data, data2, next) => next(`${data} - 6`, `${data2} - F`),
+  async function (data, data2, next) {
+    return next(await Promise.resolve(`${data} - 7 async`), `${data2} - G`)
   },
 ]
 
 class NameMiddleware {
-  handle (data, next) {
-    return next(`${data} - Stone's Class Middleware`)
+  handle (data, data2, next) {
+    return next(`${data} - Stone's Class Middleware`, `${data2} - H`)
   }
 }
 
@@ -34,7 +34,13 @@ middleware.push(NameMiddleware)
  */
 const DummyContainer = { make (Class) { return new Class() } }
 
-new Pipeline(DummyContainer)
-  .send('Middleware')
-  .through(middleware)
-  .then(data => console.log(data))
+async function test () {
+  try {
+    const val = await new Pipeline(DummyContainer).send('Middleware Request', 'Response').through(middleware).then((req, res) => res)
+    console.log('value', val)
+  } catch (error) {
+    console.log('error', val)
+  }
+}
+
+await test()
