@@ -8,8 +8,8 @@ import { PipelineException } from './exceptions/PipelineException.mjs'
 export class Pipeline {
   #pipes
   #method
-  #container
   #passable
+  #container
 
   /**
    * The Container class.
@@ -17,6 +17,15 @@ export class Pipeline {
    * @external Container
    * @see {@link https://github.com/stonemjs/service-container/blob/main/src/Container.mjs|Container}
    */
+
+  /**
+   * Create a pipeline.
+   *
+   * @param {Container} container
+   */
+  static create (container) {
+    return new this(container)
+  }
 
   /**
    * Create a pipeline.
@@ -94,6 +103,7 @@ export class Pipeline {
    */
   via (method) {
     this.#method = method
+    return this
   }
 
   /**
@@ -127,23 +137,23 @@ export class Pipeline {
    * @returns {Function}
    */
   _reducer () {
-    return (stack, pipe) => {
+    return (stack, Pipe) => {
       return async (...passable) => {
         try {
           const args = [].concat(passable, stack)
 
-          if (this.#isClass(pipe)) {
-            pipe = this.container.make(pipe)
+          if (this.#isClass(Pipe)) {
+            Pipe = this.#container ? this.#container.make(Pipe) : new Pipe()
 
-            if (!pipe[this.#method]) {
-              throw new PipelineException(`No method with this name(${this.#method}) exists in this class(${pipe.constructor.name})`)
+            if (!Pipe[this.#method]) {
+              throw new PipelineException(`No method with this name(${this.#method}) exists in this class(${Pipe.constructor.name})`)
             }
 
-            return await this._handleReducer(pipe[this.#method](...args))
-          } else if (this.#isFunction(pipe)) {
-            return await pipe(...args)
+            return await this._handleReducer(Pipe[this.#method](...args))
+          } else if (this.#isFunction(Pipe)) {
+            return await Pipe(...args)
           } else {
-            throw new PipelineException('Middleware must be a function or a class')
+            throw new PipelineException('Pipe must be a function or a class.')
           }
         } catch (error) {
           return this._handleException(passable, error)
