@@ -81,7 +81,7 @@ export class Pipeline {
    * @return {this}
    */
   through (pipes) {
-    this.#pipes = pipes
+    this.#pipes = [...pipes]
     return this
   }
 

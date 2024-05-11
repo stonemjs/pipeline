@@ -1,6 +1,8 @@
 {
   // https://www.typescriptlang.org/docs/handbook/declaration-files/dts-from-js.html
-  "include": ["dist/pipeline.mjs"],
+  "include": [
+    "dist/index.js"
+  ],
   "compilerOptions": {
     "skipLibCheck": true,
     // Tells TypeScript to read JS files, as
