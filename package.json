@@ -47,7 +47,7 @@
     "test:html": "npm run test:cvg -- --coverageReporters=html text",
     "test:lcov": "npm run test:cvg -- --coverageReporters=lcov text"
   },
-  "peerDependencies": {
+  "dependencies": {
     "@stone-js/common": "^0.0.1"
   },
   "devDependencies": {
