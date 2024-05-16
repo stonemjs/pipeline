@@ -1,4 +1,4 @@
-import { isConstructor, isFunction, isString } from '@stone-js/common'
+import { isConstructor, isFunction, isString, isPlainObject } from '@stone-js/common'
 
 /**
  * Class representing a Pipeline.
@@ -11,6 +11,7 @@ export class Pipeline {
   #isSync
   #passable
   #container
+  #defaultPriority
 
   /**
    * The Container class.
@@ -37,6 +38,7 @@ export class Pipeline {
   constructor (container = null) {
     this.#pipes = []
     this.#method = 'handle'
+    this.#defaultPriority = 10
     this.#container = container
   }
 
@@ -47,6 +49,9 @@ export class Pipeline {
    */
   get pipes () {
     return this.#pipes
+      .map(pipe => isPlainObject(pipe) ? pipe : ({ pipe, priority: this.#defaultPriority }))
+      .sort((a, b) => a.priority - b.priority)
+      .map(v => v.pipe)
   }
 
   /**
@@ -61,6 +66,17 @@ export class Pipeline {
     }
 
     return this.#container
+  }
+
+  /**
+   * Set pipes default priority.
+   *
+   * @param  {number} value
+   * @return {this}
+   */
+  defaultPriority (value) {
+    this.#defaultPriority = value
+    return this
   }
 
   /**
@@ -81,7 +97,7 @@ export class Pipeline {
    * @return {this}
    */
   through (pipes) {
-    this.#pipes = [...pipes]
+    this.#pipes = [].concat(pipes)
     return this
   }
 
