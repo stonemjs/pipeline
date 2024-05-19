@@ -1,11 +1,8 @@
 {
   "roots": ["src/", "tests/"],
-  "transform": {
-    "\\.m?[jt]sx?$": "babel-jest"
-  },
+  "transform": {},
   "collectCoverageFrom": [
-    "src/**/*.{js,mjs}",
-    "!src/index.mjs"
+    "src/**/*.{js,mjs}"
   ],
   "coverageThreshold": {
     "global": {

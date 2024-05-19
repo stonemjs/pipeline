@@ -41,8 +41,8 @@
     "release": "npm run test:text && npm run build && npm publish --access public",
     "local_publish": "npm run build && npm publish --registry http://localhost:4873/",
     "local_unpublish": "npm unpublish @stone-js/pipeline -f --registry http://localhost:4873",
-    "test": "npm run lint:test && jest",
-    "test:cvg": "npm run lint:test && jest --coverage",
+    "test": "npm run lint:test && cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:cvg": "npm run lint:test && cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "test:text": "npm run test:cvg -- --coverageReporters=text",
     "test:html": "npm run test:cvg -- --coverageReporters=html text",
     "test:lcov": "npm run test:cvg -- --coverageReporters=lcov text"
@@ -59,6 +59,7 @@
     "@rollup/plugin-multi-entry": "^6.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "babel-jest": "^29.7.0",
+    "cross-env": "^7.0.3",
     "docdash": "^2.0.2",
     "jest": "^29.7.0",
     "jsdoc": "^4.0.2",
